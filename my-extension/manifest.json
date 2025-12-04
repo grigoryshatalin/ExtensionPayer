@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "Solana Wallet Checker",
+    "version": "1.0",
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "permissions": ["scripting", "storage", "activeTab", "tabs"],
+    "host_permissions": ["<all_urls>"],
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["injector.js"],
+        "run_at": "document_start"
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["bridge.js", "checkout-detector.js"],
+        "matches": ["<all_urls>"]
+      }
+    ]
+  }
+  
