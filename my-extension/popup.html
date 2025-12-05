@@ -1,21 +1,147 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <link rel="stylesheet" href="popup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="card">
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="brand">Solami</span>
+          <span class="badge">USDC</span>
+        </div>
+      </div>
+      <div class="network-indicator">
+        <span class="network-dot"></span>
+        <span class="network-name">Mainnet</span>
+      </div>
+    </div>
 
-    <img class="logo" src="https://mintcdn.com/phantom-e50e2e68/fkWrmnMWhjoXSGZ9/resources/images/Phantom_SVG_Icon.svg?w=1100&fit=max&auto=format&n=fkWrmnMWhjoXSGZ9&q=85&s=d9602893116f9314145e2a303d675ccc" />
+    <!-- Wallet Section - Not Connected -->
+    <div id="connect-section" class="section">
+      <div class="connect-card">
+        <div class="connect-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="6" width="20" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M22 10h-4a2 2 0 100 4h4" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="18" cy="12" r="1" fill="currentColor"/>
+          </svg>
+        </div>
+        <h2>Connect Your Wallet</h2>
+        <p>Link your Phantom wallet to pay with USDC on any checkout</p>
+        <button id="connectBtn" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M19 7h-1V6a3 3 0 00-3-3H5a3 3 0 00-3 3v12a3 3 0 003 3h14a3 3 0 003-3v-8a3 3 0 00-3-3zm-1 10H6a1 1 0 01-1-1V8h12v8a1 1 0 01-1 1z" fill="currentColor"/>
+          </svg>
+          Connect Phantom
+        </button>
+      </div>
+    </div>
 
-    <h1>Solami Wallet</h1>
-    <p class="sub">Pay with crypto on any checkout</p>
+    <!-- Wallet Section - Connected -->
+    <div id="wallet-section" class="section hidden">
+      <!-- Balance Card -->
+      <div class="balance-card">
+        <div class="balance-header">
+          <span class="balance-label">USDC Balance</span>
+          <button id="refreshBtn" class="icon-btn" title="Refresh balance">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M4 12a8 8 0 018-8c2.8 0 5.2 1.4 6.6 3.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M20 12a8 8 0 01-8 8c-2.8 0-5.2-1.4-6.6-3.6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <path d="M20 4v4h-4M4 20v-4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="balance-amount">
+          <span class="currency">$</span>
+          <span id="balance">0.00</span>
+        </div>
+        <div class="wallet-address">
+          <span id="address">Not connected</span>
+          <button id="copyBtn" class="icon-btn small" title="Copy address">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
+              <rect x="8" y="8" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M4 16V6a2 2 0 012-2h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
 
-    <div id="result" class="result"></div>
+      <!-- Quick Actions -->
+      <div class="actions-grid">
+        <button id="payBtn" class="action-card">
+          <div class="action-icon pay">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/>
+              <path d="M2 10h20" stroke="currentColor" stroke-width="2"/>
+            </svg>
+          </div>
+          <span class="action-label">Pay Now</span>
+          <span class="action-desc">Use on checkout</span>
+        </button>
+        <button id="historyBtn" class="action-card">
+          <div class="action-icon history">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span class="action-label">History</span>
+          <span class="action-desc">View transactions</span>
+        </button>
+      </div>
 
-    <button id="connectBtn" class="btn" style="display: none;">
-      Connect Phantom Wallet
-    </button>
+      <!-- Status Message -->
+      <div id="status" class="status hidden"></div>
+
+      <!-- Disconnect -->
+      <button id="disconnectBtn" class="btn btn-secondary btn-sm">
+        Disconnect Wallet
+      </button>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Settings</h3>
+          <button id="closeSettings" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-group">
+            <label>Circle API Key (Optional)</label>
+            <input type="password" id="apiKeyInput" placeholder="Enter your Circle API key">
+            <p class="setting-hint">For production virtual cards. Leave empty for demo mode.</p>
+          </div>
+          <button id="saveSettings" class="btn btn-primary">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <button id="settingsBtn" class="footer-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Settings
+      </button>
+      <span class="footer-divider">|</span>
+      <span class="footer-text">Powered by Circle USDC</span>
+    </div>
   </div>
 
   <script src="popup.js"></script>
